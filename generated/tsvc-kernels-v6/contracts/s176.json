@@ -1,0 +1,67 @@
+{
+  "name": "s176",
+  "category": "SYMBOLICS",
+  "original_call": "s176();",
+  "source_lines": [
+    1868,
+    1894
+  ],
+  "source_function_sha256": "5071c72ea681c4166259d71aeb7c2e641b92f38060e8804f5cf04863b3c21636",
+  "status": "generated",
+  "signature": "void s176(int *a, const int *b, const int *c, int n)",
+  "kernel": "kernels/s176.c",
+  "reference": "reference/s176.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "Keep both convolution loops; preserve a[floor(n/2)..n).",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "name": "s481",
+  "category": "CONTROL_FLOW",
+  "original_call": "s481();",
+  "source_lines": [
+    4856,
+    4882
+  ],
+  "source_function_sha256": "9eb5110a692984cf5541dacf0e216d12eeef050c1cec0228b54f7c4948986eab",
+  "status": "generated",
+  "signature": "int s481(int *a, const int *b, const int *c, const int *d, int n)",
+  "kernel": "kernels/s481.c",
+  "reference": "reference/s481.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "d",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": null,
+      "observation": "termination",
+      "meaning": "stop index, or -1 on completion"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; return -1 (completed without a stop).",
+    "notes": "API adaptation, not process equivalence: replace exit(0) with the first negative d index; return -1 on completion. Test the stop before updating a[i]; preserve the stop element and suffix.",
+    "termination": {
+      "source": "exit(0)",
+      "process_termination": false,
+      "return_on_stop": "zero-based index of the first negative d element, before its update",
+      "return_on_completion": -1,
+      "preserved_state": "updated prefix and untouched stop element/suffix"
+    },
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "replace process exit(0) with an observable stop index; -1 means completed",
+    "expose termination's scalar observation as the return value"
+  ],
+  "experiment_caveats": {
+    "flags": [
+      "process_exit_to_returned_outcome"
+    ],
+    "aggregate_policy": "report separately; do not silently pool with ordinary integer kernels"
+  },
+  "helpers": [],
+  "testing": {
+    "profile": "termination",
+    "description": "Exercise no stop and first/middle/last stop positions independently of data trials; use mixed-sign data before and after the stop.",
+    "contract_restriction": false
+  }
+}

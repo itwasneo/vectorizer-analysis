@@ -1,0 +1,73 @@
+{
+  "name": "s171",
+  "category": "SYMBOLICS",
+  "original_call": "s171(n1);",
+  "source_lines": [
+    1735,
+    1757
+  ],
+  "source_function_sha256": "d1a8734b3fb311f69b72872a054c5ea9d740f2069c6099cb68f6ba518a896f52",
+  "status": "generated",
+  "signature": "void s171(int *a, const int *b, int inc, int n)",
+  "kernel": "kernels/s171.c",
+  "reference": "reference/s171.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "strided_vector",
+        "initialized": true,
+        "stride_parameter": "inc",
+        "minimum_elements": "max(1, n*inc)",
+        "padding": "Stride gaps and unused trailing elements are preserved; stride zero aliases a single element.",
+        "allocation": "The mathematical required element count times sizeof(int) must fit SIZE_MAX and the supplied allocation."
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [
+      {
+        "name": "inc",
+        "type": "int",
+        "domain": {
+          "id": "nonnegative_stride",
+          "minimum": "0",
+          "maximum": "INT_MAX/max(1,n)"
+        }
+      }
+    ],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "inc=0 repeatedly accumulates into a[0]. Provide max(1,n*inc) a elements, including all preserved stride gaps.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

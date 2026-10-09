@@ -1,0 +1,82 @@
+{
+  "name": "s275",
+  "category": "CONTROL_FLOW",
+  "original_call": "s275();",
+  "source_lines": [
+    2904,
+    2931
+  ],
+  "source_function_sha256": "598660b046f6e3c4359d3ec8f0236033c00431e8027aaa4de19b079299b98794",
+  "status": "generated",
+  "signature": "void s275(int *aa, const int *bb, const int *cc, int n, int ld)",
+  "kernel": "kernels/s275.c",
+  "reference": "reference/s275.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 46340,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "aa",
+        "access": "read_write",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      },
+      {
+        "name": "bb",
+        "access": "read",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      },
+      {
+        "name": "cc",
+        "access": "read",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "",
+    "scalar_outputs": [],
+    "row_stride": {
+      "parameter": "ld",
+      "minimum": "max(1, n)",
+      "maximum": 2147483647,
+      "unit": "int elements",
+      "shared_by": [
+        "aa",
+        "bb",
+        "cc"
+      ],
+      "logical_shape": "n by n (square)",
+      "padding": "Columns [n, ld) of each row are preserved.",
+      "allocation": "The mathematical n*ld*sizeof(int) must fit in SIZE_MAX and in the supplied allocation."
+    }
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN2 -> runtime n",
+    "integral floating literals -> integer literals",
+    "square matrices -> flat row-major buffers with explicit shared ld; packed arrays stay contiguous"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

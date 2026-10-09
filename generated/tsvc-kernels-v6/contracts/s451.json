@@ -1,0 +1,85 @@
+{
+  "name": "s451",
+  "category": "GLOBAL_DATA_FLOW",
+  "original_call": "s451();",
+  "source_lines": [
+    4724,
+    4751
+  ],
+  "source_function_sha256": "bf6a455c5425d225d6e23ee57b62c63a9778309d1cacbc225afd5d21a0f42669",
+  "status": "generated",
+  "signature": "void s451(int *a, const int *b, const int *c, int n)",
+  "kernel": "kernels/s451.c",
+  "reference": "reference/s451.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "Mixed numeric kernel: choose the original double sin/cos branch; convert integer arguments to double, add in double, then truncate the sum toward zero to int. Requires libm; no float-trig or fast-math substitution.",
+    "numeric_adaptation": {
+      "kind": "integer_storage_double_libm",
+      "pure_integer": false,
+      "branch": "sin/cos, not sinf/cosf",
+      "input_conversion": "exact int32 to binary64",
+      "output_conversion": "truncate the double sum toward zero to int, not each term separately",
+      "environment": "same conforming libm and default floating-point environment; no fast-math; errno and floating-point exception flags are outside the observable interface",
+      "link_libraries": [
+        "m"
+      ]
+    },
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "select double sin/cos branch; integer storage with double intermediate sum and final int truncation"
+  ],
+  "experiment_caveats": {
+    "flags": [
+      "mixed_double_libm"
+    ],
+    "aggregate_policy": "report separately; do not silently pool with ordinary integer kernels"
+  },
+  "helpers": [],
+  "testing": {
+    "profile": "integer_trig",
+    "description": "Integer-storage inputs include [-3,3], +/-1000, INT_MIN, and INT_MAX; libm receives exact binary64 conversions and the sum is truncated to int.",
+    "contract_restriction": false
+  }
+}

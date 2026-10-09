@@ -1,0 +1,58 @@
+{
+  "name": "s316",
+  "category": "REDUCTIONS",
+  "original_call": "s316();",
+  "source_lines": [
+    3682,
+    3710
+  ],
+  "source_function_sha256": "d6acf36925e9cdbcf6312b8b82f83e48fc5ca5d30a7e884867f2502135713e99",
+  "status": "generated",
+  "signature": "int s316(const int *a, int n)",
+  "kernel": "kernels/s316.c",
+  "reference": "reference/s316.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 1,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": "x",
+      "observation": "temp"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "Not admitted by the size contract.",
+    "notes": "Minimum initialized from a[0]; require nonempty input instead of inventing an empty identity.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose temp's scalar observation as the return value"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

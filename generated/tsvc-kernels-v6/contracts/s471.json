@@ -1,0 +1,99 @@
+{
+  "name": "s471",
+  "category": "GLOBAL_DATA_FLOW",
+  "original_call": "s471();",
+  "source_lines": [
+    4819,
+    4848
+  ],
+  "source_function_sha256": "a184e93e7bcf9f848c306f31e487a1d0b468e373f9f8ecb08c8ab5abfb4c0871",
+  "status": "generated",
+  "signature": "int s471(int *b, const int *c, const int *d, const int *e, int *x, int n)",
+  "kernel": "kernels/s471.c",
+  "reference": "reference/s471.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup. Retain the explicitly reviewed post-loop computation.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "b",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "d",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "e",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "x",
+        "access": "write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": "temp",
+      "observation": "postlude",
+      "kernel_variable": "checksum",
+      "source_computation": "temp = 0.; for (int i = 0; i < LEN; i++){ temp += x[i]; }"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "",
+    "scalar_outputs": [],
+    "removed_benchmark_initializers": [
+      "set1d(x, 0., 1);"
+    ]
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose postlude's scalar observation as the return value",
+    "remove only the explicitly reviewed benchmark initialization; caller supplies the initial state",
+    "retain reviewed post-loop summation; replace global temp by a returned local checksum",
+    "include reviewed leaf helpers; explicit size where needed, const read-only pointers, no VLA parameter bounds"
+  ],
+  "helpers": [
+    {
+      "name": "s471s",
+      "source_sha256": "adb40e0183e7c6bd92ee64e7fa0dfda418a2e1c9b620fc6f53afda0eb275591e"
+    }
+  ],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

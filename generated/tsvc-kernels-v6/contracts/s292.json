@@ -1,0 +1,81 @@
+{
+  "name": "s292",
+  "category": "CROSSING_THRESHOLDS",
+  "original_call": "s292();",
+  "source_lines": [
+    3325,
+    3354
+  ],
+  "source_function_sha256": "57da54cc64428ab21f8b4cfc8775269aa0121e059bb929fb928f4313e32435d6",
+  "status": "generated",
+  "signature": "void s292(int *a, const int *b, int n)",
+  "kernel": "kernels/s292.c",
+  "reference": "reference/s292.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1,
+      "excluded": [
+        1
+      ]
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "The cast of .333 is zero. n=0 is valid and unchanged; n=1 is excluded because the first b[im2] would have index -1.",
+    "numeric_adaptation": {
+      "kind": "degenerate_fractional_cast",
+      "pure_integer": true,
+      "casts": [
+        {
+          "source": "(TYPE).333",
+          "integer_value": 0
+        }
+      ],
+      "warning": "Integer casts truncate these fractions to zero; this is not floating-point scaling. Evaluated sums must still fit int."
+    },
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "explicitly reviewed fractional TYPE casts -> integer zero; not fixed-point arithmetic or division"
+  ],
+  "experiment_caveats": {
+    "flags": [
+      "degenerate_fractional_cast"
+    ],
+    "aggregate_policy": "report separately; do not silently pool with ordinary integer kernels"
+  },
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

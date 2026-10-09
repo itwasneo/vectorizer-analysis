@@ -1,0 +1,6 @@
+# Keep the tested snapshot byte-identical: source-derived C preserves some
+# upstream/comment-masking whitespace, and the copied license has a blank EOF.
+# Other whitespace checks remain enabled.
+generated/tsvc-kernels-v6/kernels/*.c whitespace=-blank-at-eol
+generated/tsvc-kernels-v6/reference/*.c whitespace=-blank-at-eol
+generated/tsvc-kernels-v6/LICENSE.TXT whitespace=-blank-at-eof

@@ -1,0 +1,107 @@
+{
+  "name": "s13110",
+  "category": "REDUCTIONS",
+  "original_call": "s13110();",
+  "source_lines": [
+    3859,
+    3893
+  ],
+  "source_function_sha256": "bd6ec6c031e789f23f1e6d21435c4125f548163f196f5fb95e996598883421ff",
+  "status": "generated",
+  "signature": "int s13110(const int *aa, int *out_max, int *out_xindex, int *out_yindex, int *out_chksum, int n, int ld)",
+  "kernel": "kernels/s13110.c",
+  "reference": "reference/s13110.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 1,
+      "maximum": 46340,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "aa",
+        "access": "read",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": null,
+      "observation": "temp",
+      "source_expression": "max + xindex+1 + yindex+1"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added. Scalar output slots are pairwise disjoint and disjoint from every array.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "Not admitted by the size contract.",
+    "notes": "Unlike s3110, xindex and yindex stay zero even if a later maximum is found. Retain both dummy checksum and temp observation.",
+    "scalar_outputs": [
+      {
+        "parameter": "out_max",
+        "source_variable": "max",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      },
+      {
+        "parameter": "out_xindex",
+        "source_variable": "xindex",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      },
+      {
+        "parameter": "out_yindex",
+        "source_variable": "yindex",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      },
+      {
+        "parameter": "out_chksum",
+        "source_variable": "chksum",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      }
+    ],
+    "dummy_observation": "chksum",
+    "row_stride": {
+      "parameter": "ld",
+      "minimum": "max(1, n)",
+      "maximum": 2147483647,
+      "unit": "int elements",
+      "shared_by": [
+        "aa"
+      ],
+      "logical_shape": "n by n (square)",
+      "padding": "Columns [n, ld) of each row are preserved.",
+      "allocation": "The mathematical n*ld*sizeof(int) must fit in SIZE_MAX and in the supplied allocation."
+    }
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN2 -> runtime n",
+    "integral floating literals -> integer literals",
+    "square matrices -> flat row-major buffers with explicit shared ld; packed arrays stay contiguous",
+    "expose temp's scalar observation as the return value",
+    "expose reviewed local scalar state and dummy observation in disjoint output slots"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "name": "s1351",
+  "category": "LOOP_REROLLING",
+  "original_call": "s1351();",
+  "source_lines": [
+    4301,
+    4329
+  ],
+  "source_function_sha256": "998271d13c45160734498390b0fa02d5b4d869fe04b1d83d74b76d6d44a56218",
+  "status": "generated",
+  "signature": "void s1351(int *a, const int *b, const int *c, int n)",
+  "kernel": "kernels/s1351.c",
+  "reference": "reference/s1351.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added. Derived pointer views share their base buffer, may overlap it, and are not restrict-qualified.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "Local pointers advance together through separate buffers. Remove original local restrict qualifiers; retain pointer induction, including one-past end pointers.",
+    "scalar_outputs": [],
+    "pointer_views": [
+      {
+        "name": "A",
+        "base": "a",
+        "initial_offset_elements": "0",
+        "access": "write",
+        "binding": "TYPE* __restrict__ A = a;",
+        "induction": true
+      },
+      {
+        "name": "B",
+        "base": "b",
+        "initial_offset_elements": "0",
+        "access": "read",
+        "binding": "TYPE* __restrict__ B = b;",
+        "induction": true
+      },
+      {
+        "name": "C",
+        "base": "c",
+        "initial_offset_elements": "0",
+        "access": "read",
+        "binding": "TYPE* __restrict__ C = c;",
+        "induction": true
+      }
+    ]
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "one backing buffer per storage object; preserve derived pointer aliases and induction without restrict"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

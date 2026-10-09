@@ -1,0 +1,65 @@
+{
+  "name": "vdotr",
+  "category": "CONTROL_LOOPS",
+  "original_call": "vdotr();",
+  "source_lines": [
+    5467,
+    5493
+  ],
+  "source_function_sha256": "b56929e1d1449caa9dae4196e198bf7bdb00e4c0f82d10fae30835cd0b64a41b",
+  "status": "generated",
+  "signature": "int vdotr(const int *a, const int *b, int n)",
+  "kernel": "kernels/vdotr.c",
+  "reference": "reference/vdotr.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": "dot",
+      "observation": "temp"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "Expose the dot product as the return value; return 0 for n=0.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose temp's scalar observation as the return value"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

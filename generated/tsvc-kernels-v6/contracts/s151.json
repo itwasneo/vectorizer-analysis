@@ -1,0 +1,66 @@
+{
+  "name": "s151",
+  "category": "GLOBAL_DATA_FLOW",
+  "original_call": "s151();",
+  "source_lines": [
+    1573,
+    1592
+  ],
+  "source_function_sha256": "235f8ac94ebeb6749fe494594fadaf3720023764bdf8781c16ee19a1de040de0",
+  "status": "generated",
+  "signature": "void s151(int *a, const int *b, int n)",
+  "kernel": "kernels/s151.c",
+  "reference": "reference/s151.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "include reviewed leaf helpers; explicit size where needed, const read-only pointers, no VLA parameter bounds"
+  ],
+  "helpers": [
+    {
+      "name": "s151s",
+      "source_sha256": "416a03a9f4cc5a7c637a3967836dfeebbc6ec27f3367d8bf18d22f0b7cc407e7"
+    }
+  ],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "name": "s255",
+  "category": "EXPANSION",
+  "original_call": "s255();",
+  "source_lines": [
+    2627,
+    2655
+  ],
+  "source_function_sha256": "7af2cb9b8c3cf16a912805674781e8e10fab39efc00fdfe78319166a6b1f72e6",
+  "status": "generated",
+  "signature": "void s255(int *a, const int *b, int n)",
+  "kernel": "kernels/s255.c",
+  "reference": "reference/s255.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 2,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "Not admitted by the size contract.",
+    "notes": "The explicit integer cast of .333 is zero, not division by three. Both evaluated additions must fit; the two-element carry setup needs n>=2.",
+    "numeric_adaptation": {
+      "kind": "degenerate_fractional_cast",
+      "pure_integer": true,
+      "casts": [
+        {
+          "source": "(TYPE).333",
+          "integer_value": 0
+        }
+      ],
+      "warning": "Integer casts truncate these fractions to zero; this is not floating-point scaling. Evaluated sums must still fit int."
+    },
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "explicitly reviewed fractional TYPE casts -> integer zero; not fixed-point arithmetic or division"
+  ],
+  "experiment_caveats": {
+    "flags": [
+      "degenerate_fractional_cast"
+    ],
+    "aggregate_policy": "report separately; do not silently pool with ordinary integer kernels"
+  },
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

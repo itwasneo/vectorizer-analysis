@@ -1,0 +1,82 @@
+{
+  "name": "s4113",
+  "category": "INDIRECT_ADDRESSING",
+  "original_call": "s4113(ip);",
+  "source_lines": [
+    4979,
+    5003
+  ],
+  "source_function_sha256": "e108facd323d8104a263a2ae23cef5591eb4679ff14e324cc0a661c6f677791c",
+  "status": "generated",
+  "signature": "void s4113(int *a, const int *b, const int *c, const int *ip, int n)",
+  "kernel": "kernels/s4113.c",
+  "reference": "reference/s4113.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "ip",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)",
+        "index_domain": {
+          "positions": "0 <= i < n",
+          "minimum": 0,
+          "maximum_exclusive": "n",
+          "duplicates_allowed": true,
+          "ordering": "arbitrary; preserve scalar execution/store order"
+        }
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "Repeated destinations preserve the order-dependent last store, including the c[i] term.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "explicit read-only index buffers; bounded but not assumed unique"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "name": "s31111",
+  "category": "REDUCTIONS",
+  "original_call": "s31111();",
+  "source_lines": [
+    3519,
+    3549
+  ],
+  "source_function_sha256": "b89d270d9be22972a3c1d9b310c9c290a596aafb5c329ba5812afafadf41bedb",
+  "status": "generated",
+  "signature": "int s31111(const int *a, int n)",
+  "kernel": "kernels/s31111.c",
+  "reference": "reference/s31111.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 32,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": "sum",
+      "observation": "dummy"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "Not admitted by the size contract.",
+    "notes": "Exactly eight four-element helper calls read a[0..31], independent of n. Require n>=32; preserve the unused suffix.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose dummy's scalar observation as the return value",
+    "include reviewed leaf helpers; explicit size where needed, const read-only pointers, no VLA parameter bounds"
+  ],
+  "helpers": [
+    {
+      "name": "test",
+      "source_sha256": "c6d6ef0bcaefccac4bef0a511093c92da5557b71419b85767d29d0fc90167076"
+    }
+  ],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

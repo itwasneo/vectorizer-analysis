@@ -1,0 +1,73 @@
+{
+  "name": "s4121",
+  "category": "GLOBAL_DATA_FLOW",
+  "original_call": "s4121();",
+  "source_lines": [
+    5133,
+    5156
+  ],
+  "source_function_sha256": "0e4e5596ac450d60d473a2fdf4b56d78127948ed1a141e16ada00b1d90adc8b7",
+  "status": "generated",
+  "signature": "void s4121(int *a, const int *b, const int *c, int n)",
+  "kernel": "kernels/s4121.c",
+  "reference": "reference/s4121.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "include reviewed leaf helpers; explicit size where needed, const read-only pointers, no VLA parameter bounds"
+  ],
+  "helpers": [
+    {
+      "name": "f",
+      "source_sha256": "e04ec8c79f1b1480c58babba2afbf68915ee9790b892d73d854dbd1210f9ec65"
+    }
+  ],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

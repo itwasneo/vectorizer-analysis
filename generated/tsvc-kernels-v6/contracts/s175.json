@@ -1,0 +1,72 @@
+{
+  "name": "s175",
+  "category": "SYMBOLICS",
+  "original_call": "s175(n1);",
+  "source_lines": [
+    1841,
+    1864
+  ],
+  "source_function_sha256": "498b64d9ba91f5ab098900a909782cbfc002c7958a77e95cb38ff471b5ab88e6",
+  "status": "generated",
+  "signature": "void s175(int *a, const int *b, int inc, int n)",
+  "kernel": "kernels/s175.c",
+  "reference": "reference/s175.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "offset_vector",
+        "initialized": true,
+        "offset_parameter": "inc",
+        "minimum_elements": "max(1, n+inc)",
+        "allocation": "The mathematical required element count times sizeof(int) must fit SIZE_MAX and the supplied allocation."
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [
+      {
+        "name": "inc",
+        "type": "int",
+        "domain": {
+          "id": "positive_step",
+          "minimum": "1",
+          "maximum": "INT_MAX-n"
+        }
+      }
+    ],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "The final a[i+inc] read may be past logical n; provide max(1,n+inc) elements. inc must be positive and the final increment must fit int.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

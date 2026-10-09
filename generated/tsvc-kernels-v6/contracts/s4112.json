@@ -1,0 +1,80 @@
+{
+  "name": "s4112",
+  "category": "INDIRECT_ADDRESSING",
+  "original_call": "s4112(ip, s1);",
+  "source_lines": [
+    4952,
+    4975
+  ],
+  "source_function_sha256": "3e1cd17e897ff9f4f30e8d7df93b41699e3c83e6dbb1d380aeba86fd7889dab6",
+  "status": "generated",
+  "signature": "void s4112(int *a, const int *b, const int *ip, int s, int n)",
+  "kernel": "kernels/s4112.c",
+  "reference": "reference/s4112.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "ip",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)",
+        "index_domain": {
+          "positions": "0 <= i < n",
+          "minimum": 0,
+          "maximum_exclusive": "n",
+          "duplicates_allowed": true,
+          "ordering": "arbitrary; preserve scalar execution/store order"
+        }
+      }
+    ],
+    "scalar_inputs": [
+      {
+        "name": "s",
+        "type": "int"
+      }
+    ],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "explicit read-only index buffers; bounded but not assumed unique"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

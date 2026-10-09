@@ -1,0 +1,64 @@
+{
+  "name": "s3113",
+  "category": "REDUCTIONS",
+  "original_call": "s3113();",
+  "source_lines": [
+    3960,
+    3988
+  ],
+  "source_function_sha256": "0d854b0d4db502371497618326b27f7867e5359e4e6a9ff614bff71bb2ff0a9f",
+  "status": "generated",
+  "signature": "int s3113(const int *a, int n)",
+  "kernel": "kernels/s3113.c",
+  "reference": "reference/s3113.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 1,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)",
+        "value_domain": {
+          "minimum": -2147483647,
+          "maximum": 2147483647,
+          "reason": "INT_MIN has no representable positive int magnitude"
+        }
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": "max",
+      "observation": "temp"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "Not admitted by the size contract.",
+    "notes": "Integer absolute-value maximum; exclude INT_MIN, whose positive magnitude is not representable as int.",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose temp's scalar observation as the return value",
+    "FABS -> integer absolute value, excluding INT_MIN"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

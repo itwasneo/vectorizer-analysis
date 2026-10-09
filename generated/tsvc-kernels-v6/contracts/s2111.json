@@ -1,0 +1,74 @@
+{
+  "name": "s2111",
+  "category": "CROSSING_THRESHOLDS",
+  "original_call": "s2111();",
+  "source_lines": [
+    3442,
+    3470
+  ],
+  "source_function_sha256": "97d3c1cebf35920bae0cd73ffbf37adda60e513e4fe2b88964e238fe69e39700",
+  "status": "generated",
+  "signature": "int s2111(int *aa, int n, int ld)",
+  "kernel": "kernels/s2111.c",
+  "reference": "reference/s2111.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup. Retain the explicitly reviewed post-loop computation.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 46340,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "aa",
+        "access": "read_write",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": "temp",
+      "observation": "postlude",
+      "kernel_variable": "checksum",
+      "source_computation": "temp = 0.; for (int i = 0; i < LEN2; i++) for (int j = 0; j < LEN2; j++) temp += aa[i][j]; if (temp == 0) temp = 3.;"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; the original zero-checksum fallback returns 3, including n=0.",
+    "notes": "Retain the post-loop sum and its zero-to-three fallback, not just the wavefront writes.",
+    "scalar_outputs": [],
+    "row_stride": {
+      "parameter": "ld",
+      "minimum": "max(1, n)",
+      "maximum": 2147483647,
+      "unit": "int elements",
+      "shared_by": [
+        "aa"
+      ],
+      "logical_shape": "n by n (square)",
+      "padding": "Columns [n, ld) of each row are preserved.",
+      "allocation": "The mathematical n*ld*sizeof(int) must fit in SIZE_MAX and in the supplied allocation."
+    }
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN2 -> runtime n",
+    "integral floating literals -> integer literals",
+    "square matrices -> flat row-major buffers with explicit shared ld; packed arrays stay contiguous",
+    "expose postlude's scalar observation as the return value",
+    "retain reviewed post-loop summation; replace global temp by a returned local checksum"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "wavefront",
+    "description": "Full [-3,3] inputs for n<=8; otherwise set only row/column boundaries to a bounded six-period wave f(i-j), with f(k)=f(k-1)+f(k+1). Interior inputs remain independently initialized.",
+    "contract_restriction": false
+  }
+}

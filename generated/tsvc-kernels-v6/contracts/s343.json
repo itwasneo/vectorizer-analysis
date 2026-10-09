@@ -1,0 +1,81 @@
+{
+  "name": "s343",
+  "category": "PACKING",
+  "original_call": "s343();",
+  "source_lines": [
+    4232,
+    4263
+  ],
+  "source_function_sha256": "755a03d3ce3ad0c95ebe7dd76146a689b594e1391f4ab2cff5a8d388a0ca1f62",
+  "status": "generated",
+  "signature": "void s343(const int *aa, int *array, const int *bb, int n, int ld)",
+  "kernel": "kernels/s343.c",
+  "reference": "reference/s343.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 46340,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "aa",
+        "access": "read",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      },
+      {
+        "name": "array",
+        "access": "write",
+        "layout": "flat_square",
+        "initialized": true,
+        "minimum_elements": "max(1, n*n)"
+      },
+      {
+        "name": "bb",
+        "access": "read",
+        "layout": "row_major_matrix",
+        "initialized": true,
+        "minimum_elements": "max(1, n*ld)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "Conditional column-major packing (i outer, j inner, aa[j][i]); preserve the unused contiguous output suffix and matrix padding.",
+    "scalar_outputs": [],
+    "row_stride": {
+      "parameter": "ld",
+      "minimum": "max(1, n)",
+      "maximum": 2147483647,
+      "unit": "int elements",
+      "shared_by": [
+        "aa",
+        "bb"
+      ],
+      "logical_shape": "n by n (square)",
+      "padding": "Columns [n, ld) of each row are preserved.",
+      "allocation": "The mathematical n*ld*sizeof(int) must fit in SIZE_MAX and in the supplied allocation."
+    }
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN2 -> runtime n",
+    "integral floating literals -> integer literals",
+    "square matrices -> flat row-major buffers with explicit shared ld; packed arrays stay contiguous"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

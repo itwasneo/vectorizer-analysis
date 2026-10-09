@@ -1,0 +1,67 @@
+{
+  "name": "s322",
+  "category": "RECURRENCES",
+  "original_call": "s322();",
+  "source_lines": [
+    4023,
+    4046
+  ],
+  "source_function_sha256": "4e9f1209210d2f73ba422ad12014eb01bd60309ec5801ab493a786de45781aa4",
+  "status": "generated",
+  "signature": "void s322(int *a, const int *b, const int *c, int n)",
+  "kernel": "kernels/s322.c",
+  "reference": "reference/s322.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read_write",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "b",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      },
+      {
+        "name": "c",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": null,
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; reductions return 0.",
+    "notes": "",
+    "scalar_outputs": []
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "second_order_recurrence",
+    "description": "Full [-3,3] coefficients for n<=8; otherwise each (b[i],c[i]) has at most one nonzero entry in {-1,1}, so |a[i]| <= 3*(i+1).",
+    "contract_restriction": false
+  }
+}

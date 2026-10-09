@@ -1,0 +1,78 @@
+{
+  "name": "s331",
+  "category": "SEARCHING",
+  "original_call": "s331();",
+  "source_lines": [
+    4082,
+    4112
+  ],
+  "source_function_sha256": "1be3621cb2c42756e2bd57e5b8bb158356d48f1a29f45d5f9839ddf386999984",
+  "status": "generated",
+  "signature": "int s331(const int *a, int *out_j, int *out_chksum, int n)",
+  "kernel": "kernels/s331.c",
+  "reference": "reference/s331.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 0,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read",
+        "layout": "vector",
+        "initialized": true,
+        "minimum_elements": "max(1, n)"
+      }
+    ],
+    "scalar_inputs": [],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": null,
+      "observation": "temp",
+      "source_expression": "j+1"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added. Scalar output slots are pairwise disjoint and disjoint from every array.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "No array writes; return 0, with out_j=out_chksum=-1.",
+    "notes": "Last negative element, not first. Return the original 1-based temp observation; expose the zero-based index (-1 if absent) and dummy checksum.",
+    "scalar_outputs": [
+      {
+        "parameter": "out_j",
+        "source_variable": "j",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      },
+      {
+        "parameter": "out_chksum",
+        "source_variable": "chksum",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      }
+    ],
+    "dummy_observation": "chksum"
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose temp's scalar observation as the return value",
+    "expose reviewed local scalar state and dummy observation in disjoint output slots"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}

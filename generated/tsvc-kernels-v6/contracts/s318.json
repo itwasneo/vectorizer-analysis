@@ -1,0 +1,105 @@
+{
+  "name": "s318",
+  "category": "REDUCTIONS",
+  "original_call": "s318(n1);",
+  "source_lines": [
+    3745,
+    3783
+  ],
+  "source_function_sha256": "4e3e30089d504ac8493832c84fb6f8583902bca07a525573c45907b6d76c9c76",
+  "status": "generated",
+  "signature": "int s318(const int *a, int *out_max, int *out_index, int *out_chksum, int inc, int n)",
+  "kernel": "kernels/s318.c",
+  "reference": "reference/s318.c",
+  "contract": {
+    "integer_type": "signed 32-bit int",
+    "execution": "One execution of the original repetition-loop body, including local setup.",
+    "size": {
+      "parameter": "n",
+      "minimum": 1,
+      "maximum": 1073741823,
+      "multiple_of": 1
+    },
+    "arrays": [
+      {
+        "name": "a",
+        "access": "read",
+        "layout": "strided_vector",
+        "initialized": true,
+        "stride_parameter": "inc",
+        "minimum_elements": "max(1, n*inc)",
+        "padding": "Stride gaps and unused trailing elements are preserved; stride zero aliases a single element.",
+        "allocation": "The mathematical required element count times sizeof(int) must fit SIZE_MAX and the supplied allocation.",
+        "value_domain": {
+          "minimum": -2147483647,
+          "maximum": 2147483647,
+          "reason": "INT_MIN has no representable positive int magnitude"
+        }
+      }
+    ],
+    "scalar_inputs": [
+      {
+        "name": "inc",
+        "type": "int",
+        "domain": {
+          "id": "nonnegative_stride",
+          "minimum": "0",
+          "maximum": "INT_MAX/max(1,n)"
+        }
+      }
+    ],
+    "scalar_output": {
+      "type": "int",
+      "source_variable": null,
+      "observation": "temp",
+      "source_expression": "max + index+1"
+    },
+    "aliasing": "Distinct array arguments must have non-overlapping storage, matching the original globals. No restrict qualifier is added. Scalar output slots are pairwise disjoint and disjoint from every array.",
+    "arithmetic": "Every evaluated signed arithmetic expression must be representable as int. Signed overflow is not defined as wraparound.",
+    "memory": "All array arguments are valid initialized buffers, also when n=0. No alignment beyond int alignment is required.",
+    "empty_input": "Not admitted by the size contract.",
+    "notes": "First absolute maximum on ties. index is the logical iteration, not index*inc. Zero stride repeatedly visits a[0]. n*inc must fit int, including the final k increment.",
+    "scalar_outputs": [
+      {
+        "parameter": "out_max",
+        "source_variable": "max",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      },
+      {
+        "parameter": "out_index",
+        "source_variable": "index",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      },
+      {
+        "parameter": "out_chksum",
+        "source_variable": "chksum",
+        "type": "int",
+        "access": "write",
+        "minimum_elements": 1,
+        "initialized": true
+      }
+    ],
+    "dummy_observation": "chksum"
+  },
+  "adaptations": [
+    "float/double data type -> signed int",
+    "remove harness and execute one computational repetition",
+    "LEN/lll -> runtime n",
+    "integral floating literals -> integer literals",
+    "expose temp's scalar observation as the return value",
+    "expose reviewed local scalar state and dummy observation in disjoint output slots",
+    "FABS -> integer absolute value, excluding INT_MIN"
+  ],
+  "helpers": [],
+  "testing": {
+    "profile": "default",
+    "description": "Data in [-3,3]; zero, one, minus-one, alternating, and seeded random trials.",
+    "contract_restriction": false
+  }
+}
