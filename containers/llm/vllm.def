@@ -1,0 +1,32 @@
+Bootstrap: docker
+From: vllm/vllm-openai:v0.11.0
+
+%labels
+    Description vLLM OpenAI-compatible server; target H100 nodes
+    VllmVersion 0.11.0
+
+%post
+    set -eu
+    mkdir -p /models /cache
+
+%environment
+    export PYTHONNOUSERSITE=1
+    export HF_HOME=/cache/huggingface
+    export XDG_CACHE_HOME=/cache/xdg
+    export TRITON_CACHE_DIR=/cache/triton
+    export VLLM_CACHE_ROOT=/cache/vllm
+
+%runscript
+    # Explicit entrypoint: do not depend on Docker ENTRYPOINT conversion.
+    exec python3 -m vllm.entrypoints.openai.api_server "$@"
+
+%test
+    # Do not initialize CUDA during a build on a machine without GPUs.
+    python3 -c 'from importlib.metadata import version; assert version("vllm") == "0.11.0"'
+
+%help
+    Run within a Slurm H100 allocation with a writable cache:
+    apptainer run --nv --cleanenv --bind /path/to/models:/models:ro,/path/to/cache:/cache vllm.sif \
+        --model /models/model --served-model-name local-model --host 127.0.0.1 --port 8000 \
+        --dtype half --max-model-len 4096 --tensor-parallel-size 1
+    Check the upstream image CUDA requirements against the host NVIDIA driver.

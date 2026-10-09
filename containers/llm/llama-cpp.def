@@ -1,0 +1,47 @@
+Bootstrap: docker
+From: nvidia/cuda:12.4.1-devel-ubuntu22.04
+
+%labels
+    Description CUDA-enabled llama.cpp server for GGUF inference on V100 and H100
+    LlamaCppVersion b5046
+
+%post
+    set -eu
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update
+    apt-get install -y --no-install-recommends ca-certificates git cmake build-essential
+    git clone --depth 1 --branch b5046 https://github.com/ggml-org/llama.cpp.git /opt/llama.cpp
+    # Resolve libggml-cuda's driver dependency when linking without a host GPU.
+    # The toolkit stub has SONAME libcuda.so.1 but is shipped as libcuda.so.
+    mkdir -p /opt/cuda-link-stubs
+    ln -s /usr/local/cuda/lib64/stubs/libcuda.so /opt/cuda-link-stubs/libcuda.so.1
+    cmake -S /opt/llama.cpp -B /opt/llama.cpp/build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,/opt/cuda-link-stubs" \
+        -DGGML_CUDA=ON \
+        -DGGML_NATIVE=OFF \
+        -DCMAKE_CUDA_ARCHITECTURES="70;90" \
+        -DLLAMA_CURL=OFF \
+        -DLLAMA_BUILD_TESTS=OFF
+    cmake --build /opt/llama.cpp/build --parallel 4 --target llama-server llama-cli
+    # -rpath-link is link-time only; never put driver stubs on the runtime path.
+    rm -rf /opt/cuda-link-stubs
+    ln -s /opt/llama.cpp/build/bin/llama-server /usr/local/bin/llama-server
+    ln -s /opt/llama.cpp/build/bin/llama-cli /usr/local/bin/llama-cli
+    mkdir -p /models /cache
+    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+%runscript
+    exec /opt/llama.cpp/build/bin/llama-server "$@"
+
+%test
+    # Structural check only: building does not require a GPU or a host driver.
+    test -x /opt/llama.cpp/build/bin/llama-server
+    test -x /opt/llama.cpp/build/bin/llama-cli
+
+%help
+    Run within a Slurm GPU allocation:
+    apptainer run --nv --cleanenv --bind /path/to/models:/models:ro llama-cpp.sif \
+        --model /models/model.gguf --n-gpu-layers 99 --ctx-size 4096 --host 127.0.0.1 --port 8000
+    CUDA architectures: V100 (70), H100 (90). Host driver must support CUDA 12.4.

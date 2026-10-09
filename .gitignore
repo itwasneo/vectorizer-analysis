@@ -1,0 +1,36 @@
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Downloaded models and runtime caches
+/models/
+/llm-cache/
+.cache/
+
+# Generated Apptainer/Singularity images
+*.sif
+
+# Runtime and Slurm logs
+*.log
+slurm-*.out
+llm-query-*.out
+llm-server-*.out
+
+# Local secrets (keep example configuration trackable)
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
